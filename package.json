@@ -1,0 +1,16 @@
+{
+  "name": "trab",
+  "version": "1.0.0",
+  "main": "teste.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "file-system": "^2.2.2",
+    "shelljs": "^0.8.5"
+  }
+}
