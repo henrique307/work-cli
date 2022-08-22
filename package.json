@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "file-system": "^2.2.2",
+    "inquirer": "^9.1.0",
     "shelljs": "^0.8.5"
   }
 }

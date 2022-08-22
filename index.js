@@ -1,100 +1,114 @@
 #!/usr/bin/env node
-const [[trabalhos, links], shl, fs] = [require("./db"), require("shelljs"), require("file-system")];
 
-// FUNCTIONS
+const [dados, shl, fs] = [require("./db"), require("shelljs"), require("file-system")];
 
-function get_index() {
-    trabalhos.includes(process.argv[2]) ? "encontrei":"nao ta aqui nao"
-}
+// function pegaComandos() {
+//     inquirer.prompt(, (res) => {
+//         if(res === "e"){
+//             inquirer.close();
+//         } else {
+//             pegaComandos()
+//         }
+//     })
+// }
 
 switch(process.argv[2]){
     case "add":
 
-        process.argv[3] ? (() => {
-/**
- * MEU DEUS QUE CODIGO FEIO, eu sei, mas fica legal no arquivo DB depois
- */
+        process.argv[3] && process.argv[4]? (async () => {
+            /**
+             * MEU DEUS QUE CODIGO FEIO, eu sei, mas fica legal no arquivo DB depois
+             */
 
-// TRABALHOS
+            // console.log("Adicione os comandos à serem executados sempre que o projeto for chamado:(e para sair)")
+            
+            // const comandos = await pegaComandos()
 
-fs.writeFile("./db/trabalhos.js",
+            fs.writeFile("./db/index.js",
 
-`const trabalhos = [${trabalhos.map(trab => `
-    "${trab}"`)},
-    "${process.argv[3]}"
+`const dados = [${dados.map(trab => `
+    {
+        projeto: "${trab.projeto}",
+        path: "${trab.path}"
+    }`)},
+    {
+        projeto: "${process.argv[3]}",
+        path: "${shl.pwd()}/${process.argv[4]}"
+    }
 ]
 
-module.exports = trabalhos`,
+module.exports = dados`,
 
-err => {if(err) throw err})
+            err => {if(err) throw err})
 
-// LINKS
+        })() : (
+            console.error("ERRO: voce deve definir um alias e um caminho respectivamente")
+        );
 
-fs.writeFile("./db/links.js",
-
-`const links = [${links.map(link => `
-    "${link}"`)},
-    "${shl.pwd()}/${process.argv[4]}"
-]
-
-module.exports = links`,
-
-err => {if(err) throw err})
-
-    })() : (
-            shl.echo("voce deve definir um alias e uma rota respectivamente")
-    );
     break
 
     case "rem":
         process.argv[3] ? (() => {
 
-fs.writeFile("./db/trabalhos.js",
+fs.writeFile("./db/index.js",
 
-`const trabalhos = [${trabalhos.splice(trabalhos.indexOf(process.argv[3]), 1),trabalhos.map(trab => `
-    "${trab}"`)}
+`const dados = [${dados.splice(dados.findIndex(dado => dado.projeto == process.argv[3]), 1),dados.map(trab => `
+    {
+        projeto: "${trab.projeto}",
+        path: "${trab.path}"
+    }`)}
 ]
 
-module.exports = trabalhos`,
-
-err => {if(err) throw err})
-
-// LINKS
-
-fs.writeFile("./db/links.js",
-
-`const links = [${links.splice(trabalhos.indexOf(process.argv[3]), 1),links.map(link => `
-        "${link}"`)}
-]
-
-module.exports = links`,
+module.exports = dados`,
 
 err => {if(err) throw err})
 
         })() : (
-            shl.echo("voce deve definir um alias e uma rota respectivamente")
+            console.error("ERRO: voce deve definir um alias")
         );
 
     break
 
     case "list":
-            const objeto = trabalhos.map((trab, index) => {})
+        console.table(dados)
+    break
+
+    case undefined || "--help":
+        console.log(`
+COMANDOS:
+
+add - adiciona um alias com um caminho
+      uso: add [alias] [caminho / . para o diretório atual] 
+
+rem - remove um alias e seu caminho
+      uso: rem [alias]
+
+list - lista todos os alias e seus caminhos
+        `)
+    break
 
     default:
+        let encontrado = false
+        for (index in dados) {
+            if(dados[index].projeto === process.argv[2]){
+                console.log("iniciando projeto..."),
+                shl.exec(`code -r ${dados[index].path}`)
+                encontrado = true
+            }
+        }
+
+        if(!encontrado) console.log("projeto não encontrado")
+        
+    break
 
 }
 
-// 	"list")
-// 		for (( i=0; i<${#trabalhos[@]}; i++ )); do
-//            printf "\n\"${trabalhos[i]}\"................${links[i]}\n"
-//         done
-// 	;;
 // 	*)
 // 		for i in "${!trabalhos[@]}"; do
 
 // 			if [ "$1" == "${trabalhos[i]}" ] ; then
 // 				echo iniciando projeto...
-// 				code -r "${links[i]}"
+// 				code -r "${paths[i]}"
 // 			fi
 // 		done
 // 	;;
