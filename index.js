@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const [dados, shl, fs] = [require("./db"), require("shelljs"), require("file-system")];
+const [dados, shl, fs, os] = [require("./db"), require("shelljs"), require("file-system"), require("os")];
 
 // function pegaComandos() {
 //     inquirer.prompt(, (res) => {
@@ -24,7 +24,7 @@ switch(process.argv[2]){
             
             // const comandos = await pegaComandos()
 
-            fs.writeFile("./db/index.js",
+            fs.writeFile(`${os.homedir()}/Documents/codigos/bashScripts/work/db/index.js`,
 
 `const dados = [${dados.map(trab => `
     {
@@ -50,7 +50,7 @@ module.exports = dados`,
     case "rem":
         process.argv[3] ? (() => {
 
-fs.writeFile("./db/index.js",
+fs.writeFile(`${os.homedir()}/Documents/codigos/bashScripts/work/db/index.js`,
 
 `const dados = [${dados.splice(dados.findIndex(dado => dado.projeto == process.argv[3]), 1),dados.map(trab => `
     {
