@@ -17,7 +17,11 @@ const dados = [
     },
     {
         projeto: "sapi",
-        path: "home/henrique/Documents/codigos/nodejs/seuPersonagemAPI"
+        path: "/home/henrique/Documents/codigos/nodejs/seuPersonagemAPI"
+    },
+    {
+        projeto: "trab",
+        path: "/home/henrique/Documents/codigos/bashScripts/trab/."
     }
 ]
 
